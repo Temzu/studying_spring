@@ -148,8 +148,3 @@ buildNumber.properties
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,java-web,maven
 
 
-lesson_3/.idea/misc.xml
-
-lesson_3/.idea/modules.xml
-
-*.misc.xml
