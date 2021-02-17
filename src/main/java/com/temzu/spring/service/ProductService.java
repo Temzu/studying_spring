@@ -22,6 +22,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @PostConstruct
+    public void init() {
+        prodId = getProducts().size();
+    }
+
     public List<Product> getProducts() {
         return productRepository.getProductsList();
     }
@@ -57,10 +62,5 @@ public class ProductService {
                 .mapToInt(Product::getCost)
                 .average()
                 .orElse(0);
-    }
-
-    @PostConstruct
-    public void init() {
-        prodId = getProducts().size();
     }
 }

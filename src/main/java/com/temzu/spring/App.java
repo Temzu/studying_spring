@@ -1,9 +1,9 @@
 package com.temzu.spring;
 
-import com.temzu.spring.command.CommandRequest;
+import com.temzu.spring.command.CommandsReq;
 import com.temzu.spring.config.AppConfig;
 import com.temzu.spring.annotations.Req;
-import com.temzu.spring.controllers.ProductController;
+import com.temzu.spring.service.RequestHandlerService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -19,33 +19,34 @@ import java.util.Objects;
 public class App {
 
     public static void main(String[] args) throws IOException, InvocationTargetException, IllegalAccessException {
+
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
-        ProductController productController = applicationContext.getBean("productController", ProductController.class);
+        RequestHandlerService requestHandlerService = applicationContext.getBean("requestHandlerService", RequestHandlerService.class);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Method unknownMethod = null;
-        Method[] allMethods = productController.getClass().getDeclaredMethods();
+        Method[] allMethods = requestHandlerService.getClass().getDeclaredMethods();
         List<Method> annotatedMethods = new ArrayList<>();
 
         for (Method method : allMethods) {
             if (method.isAnnotationPresent(Req.class)) {
-                if (method.getAnnotation(Req.class).value().equals(CommandRequest.UNKNOWN.getQualifier())) {
+                if (method.getAnnotation(Req.class).value().equals(CommandsReq.UNKNOWN)) {
                     unknownMethod = method;
                 }
                 annotatedMethods.add(method);
             }
         }
 
-        CommandRequest command = CommandRequest.UNKNOWN;
-        while (command != CommandRequest.STOP) {
-            String[] req = reader.readLine().split(" ");
-            command = CommandRequest.defineCommand(req[0]);
-            CommandRequest finalCommand = command;
+        System.out.println("Enter the command '/help' to see all commands...");
+        String cmd = CommandsReq.UNKNOWN;
+        while (!cmd.equals(CommandsReq.STOP)) {
+            String[] reqParam = reader.readLine().split(" ");
+            cmd = reqParam[0];
             Objects.requireNonNull(annotatedMethods.stream()
-                    .filter(method -> method.getAnnotation(Req.class).value().equals(finalCommand.getQualifier()))
+                    .filter(method -> method.getAnnotation(Req.class).value().equals(reqParam[0]))
                     .findAny()
                     .orElse(unknownMethod))
-                    .invoke(productController, (Object) req);
+                    .invoke(requestHandlerService, (Object) reqParam);
         }
     }
 }

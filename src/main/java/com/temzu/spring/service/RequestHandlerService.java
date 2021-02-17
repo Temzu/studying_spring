@@ -1,13 +1,12 @@
-package com.temzu.spring.controllers;
+package com.temzu.spring.service;
 
-import com.temzu.spring.command.CommandRequest;
 import com.temzu.spring.annotations.Req;
-import com.temzu.spring.service.ProductService;
+import com.temzu.spring.command.CommandsReq;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
-@Controller
-public class ProductController {
+@Component
+public class RequestHandlerService {
 
     private ProductService productService;
 
@@ -16,7 +15,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @Req(value = "get")
+    @Req(value = CommandsReq.GET)
     public void getProducts(String[] req) {
         if (req.length < 2 || req.length > 3) {
             System.out.println("Error read request");
@@ -34,7 +33,7 @@ public class ProductController {
         }
     }
 
-    @Req(value = "create")
+    @Req(value = CommandsReq.CREATE)
     public void createNewProduct(String[] req) {
         if (req.length != 3) {
             System.out.println("Error: It is required to enter the name and price of the product");
@@ -51,7 +50,7 @@ public class ProductController {
         }
     }
 
-    @Req(value = "update")
+    @Req(value = CommandsReq.UPDATE)
     public void updateProduct(String[] req) {
         if (req.length != 4) {
             System.out.println("Error update request");
@@ -69,7 +68,7 @@ public class ProductController {
         }
     }
 
-    @Req(value = "delete")
+    @Req(value = CommandsReq.DELETE)
     public void deleteProductById(String[] req) {
         if (req.length != 2) {
             System.out.println("Error delete request");
@@ -85,7 +84,7 @@ public class ProductController {
         }
     }
 
-    @Req(value = "count")
+    @Req(value = CommandsReq.COUNT)
     public void getNumberProducts(String[] req) {
         if (req.length > 1) {
             System.out.println("Error count request");
@@ -95,18 +94,17 @@ public class ProductController {
         System.out.println("number of products: " + productService.getNumberProducts());
     }
 
-    @Req(value = "avg")
+    @Req(value = CommandsReq.AVG)
     public void getCostAvg(String[] req) {
         if (req.length > 1) {
             System.out.println("Error avg request");
             info();
             return;
         }
-        System.out.println(productService);
         System.out.println("Avg of cost: " + productService.getCostAvg());
     }
 
-    @Req(value = "help")
+    @Req(value = CommandsReq.HELP)
     public void help(String[] req) {
         if (req.length > 1) {
             System.out.println("Error help request");
@@ -116,17 +114,17 @@ public class ProductController {
         info();
     }
 
-    @Req(value = "stop")
+    @Req(value = CommandsReq.STOP)
     public void stop(String[] req) {
         if (req.length > 1) {
             System.out.println("Error stop request");
             info();
             return;
         }
-        info();
+        System.out.println("App stopped!");
     }
 
-    @Req(value = "unknown")
+    @Req(value = CommandsReq.UNKNOWN)
     public void unknown(String[] req) {
         System.out.println("Unknown command: " + req[0]);
         info();
@@ -134,7 +132,7 @@ public class ProductController {
 
     private void info() {
         System.out.printf(
-                "Commands:\n" +
+                "CommandsReq:\n" +
                         "%-35s - view all products\n" +
                         "%-35s - view product by id\n" +
                         "%-35s - create new product\n" +
@@ -143,13 +141,13 @@ public class ProductController {
                         "%-35s - number of products\n" +
                         "%-35s - Avg of cost\n" +
                         "%-35s - Stop the program\n",
-                CommandRequest.GET + " all",
-                CommandRequest.GET + " id [id]",
-                CommandRequest.CREATE + " [title] [cost]",
-                CommandRequest.UPDATE + " [id] [new title] [new cost]",
-                CommandRequest.DELETE + " [id]",
-                CommandRequest.COUNT,
-                CommandRequest.AVG,
-                CommandRequest.STOP);
+                CommandsReq.GET + " list",
+                CommandsReq.GET + " id [id]",
+                CommandsReq.CREATE + " [title] [cost]",
+                CommandsReq.UPDATE + " [id] [new title] [new cost]",
+                CommandsReq.DELETE + " [id]",
+                CommandsReq.COUNT,
+                CommandsReq.AVG,
+                CommandsReq.STOP);
     }
 }
