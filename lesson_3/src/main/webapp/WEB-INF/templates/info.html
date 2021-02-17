@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Info</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<div class="container">
+    <H1>Info</H1>
+    <span th:text="${selectedProduct.id + ' ' + selectedProduct.title + ' ' + selectedProduct.cost}"></span>
+</div>
+
+</body>
+
+</html>
