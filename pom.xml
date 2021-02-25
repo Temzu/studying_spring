@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>lesson_3</module>
+        <module>hibernate_crud</module>
     </modules>
 
     <properties>
