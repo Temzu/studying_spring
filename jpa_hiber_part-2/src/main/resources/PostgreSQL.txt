@@ -1,0 +1,64 @@
+BEGIN;
+
+CREATE TABLE hiber_schema.customers
+(
+    id bigserial,
+    name character varying(250) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE hiber_schema.customers
+    OWNER to postgres;
+
+INSERT INTO hiber_schema.customers (name) VALUES ('artem'), ('vasya'), ('egor'), ('petr');
+
+CREATE TABLE hiber_schema.products
+(
+    id bigserial,
+    title character varying(250) NOT NULL,
+    cost integer NOT NULL,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE hiber_schema.products
+    OWNER to postgres;
+
+INSERT INTO hiber_schema.products (title, cost) VALUES 
+('notebook', 350), 
+('backpack', 2000), 
+('pen', 100), 
+('pencil', 50);
+
+CREATE TABLE hiber_schema.customers_products
+(
+    customer_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    cost numeric(6, 2) NOT NULL,
+    date date NOT NULL,
+    CONSTRAINT fk_customer FOREIGN KEY (customer_id)
+        REFERENCES hiber_schema.customers (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT fk_product FOREIGN KEY (product_id)
+        REFERENCES hiber_schema.products (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+ALTER TABLE hiber_schema.customers_products
+    OWNER to postgres;
+
+INSERT INTO hiber_schema.customers_products (customer_id, product_id, cost, date) 
+VALUES 
+(3, 1, 100, '2013-06-01'), 
+(3, 2, 1200, '2013-06-01'), 
+(3, 1, 200, '2016-08-01'), 
+(3, 4, 35, '2016-06-01'),
+(3, 1, 235, '2019-06-01'),
+(3, 2, 1800, '2019-06-01'),
+(4, 1, 150, '2015-06-01'),
+(3, 3, 70, '2015-06-01');
+
+COMIT;
