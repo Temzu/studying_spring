@@ -1,6 +1,6 @@
 package com.temzu.jpa_hiber.repositories;
 
-import com.temzu.jpa_hiber.entities.Product;
+import com.temzu.jpa_hiber.entities.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,53 +10,54 @@ import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
-public class ProductRepository {
+public class CustomerRepository {
     private SessionFactory sessionFactory;
 
     @Autowired
-    public ProductRepository(EntityManagerFactory factory) {
+    public CustomerRepository(EntityManagerFactory factory) {
         if(factory.unwrap(SessionFactory.class) == null){
             throw new NullPointerException("factory is not a hibernate factory");
         }
         this.sessionFactory = factory.unwrap(SessionFactory.class);
     }
 
-    public void saveOrUpdateProduct(Product product) {
+    public void saveOrUpdateCustomer(Customer customer) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            if (product != null)
-                session.saveOrUpdate(product);
+            if (customer != null)
+                session.saveOrUpdate(customer);
             session.getTransaction().commit();
         }
     }
 
-    public List<Product> listProducts() {
-        List<Product> products;
+    public List<Customer> listCustomers() {
+        List<Customer> customers;
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            products = session.createQuery("from Product").getResultList();
+            customers = session.createQuery("from Customer").getResultList();
             session.getTransaction().commit();
         }
-        return products;
+        return customers;
     }
 
-    public Product getProductById(Long id) {
-        Product product;
+    public Customer getCustomerById(Long id) {
+        Customer customer;
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            product = session.get(Product.class, id);
+            customer = session.get(Customer.class, id);
             session.getTransaction().commit();
         }
-        return product;
+        return customer;
     }
 
-    public void deleteProduct(Long id) {
+    public void deleteCustomer(Long id) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            Product product = session.get(Product.class, id);
-            if (product != null)
-                session.delete(product);
+            Customer customer = session.get(Customer.class, id);
+            if (customer != null)
+                session.delete(customer);
             session.getTransaction().commit();
         }
     }
+
 }
