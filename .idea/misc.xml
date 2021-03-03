@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/spring_boot/pom.xml" />
         <option value="$PROJECT_DIR$/jpa_hiber_part-2/pom.xml" />
+        <option value="$PROJECT_DIR$/data/pom.xml" />
       </list>
     </option>
   </component>
