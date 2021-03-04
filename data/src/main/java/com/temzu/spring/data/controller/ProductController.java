@@ -34,6 +34,11 @@ public class ProductController {
         return productService.getAllProductsByPriceBetween(first, second);
     }
 
+    @GetMapping("/contain")
+    public List<Product> getAllProductsByTitleContaining(@RequestParam String s) {
+        return productService.getAllProductsByTitleContaining(s);
+    }
+
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);

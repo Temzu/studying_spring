@@ -3,7 +3,6 @@ package com.temzu.spring.data.services;
 import com.temzu.spring.data.model.Product;
 import com.temzu.spring.data.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +28,10 @@ public class ProductService {
 
     public List<Product> getAllProductsByPriceBetween(Integer first, Integer second) {
         return productRepository.findAllByPriceBetween(first, second);
+    }
+
+    public List<Product> getAllProductsByTitleContaining(String title) {
+        return productRepository.findByTitleContainingIgnoreCase(title);
     }
 
     public Product getProductById(@PathVariable Long id) {
