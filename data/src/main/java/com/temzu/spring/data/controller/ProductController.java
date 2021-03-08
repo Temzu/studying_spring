@@ -1,6 +1,7 @@
 package com.temzu.spring.data.controller;
 
 import com.temzu.spring.data.model.Product;
+import com.temzu.spring.data.model.SortDirection;
 import com.temzu.spring.data.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,13 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<Product> getAllProducts(
+            @RequestParam(defaultValue = "1", required = false) Integer page,
+            @RequestParam(defaultValue = "5", required = false) Integer size,
+            @RequestParam(defaultValue = "id", required = false) String[] sortFields,
+            @RequestParam(defaultValue = "ASC", required = false) SortDirection sortDir
+            ) {
+        return productService.getAllProducts(page, size, sortFields, sortDir.toString()).toList();
     }
 
     @GetMapping("/less")

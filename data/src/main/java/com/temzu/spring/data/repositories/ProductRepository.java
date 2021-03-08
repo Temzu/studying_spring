@@ -9,7 +9,10 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByPriceLessThan(Integer param);
+
     List<Product> findAllByPriceGreaterThan(Integer param);
+
     List<Product> findAllByPriceBetween(Integer first, Integer second);
+
     List<Product> findByTitleContainingIgnoreCase(String title);
 }

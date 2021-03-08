@@ -4,8 +4,8 @@ insert into products (title, price) values
 ('Apple', 50),
 ('Orange', 60),
 ('Chocolate', 100),
-('Bread', 30),
 ('Mineral water', 35),
+('Bread', 35),
 ('Parsley', 70),
 ('Kefir', 70),
 ('Monitor', 23000),
@@ -18,5 +18,5 @@ insert into products (title, price) values
 ('Pen', 300),
 ('Scissors', 400),
 ('Tea', 90),
-('Milk', 70),
+('Milk', 60),
 ('Jack', 90);
