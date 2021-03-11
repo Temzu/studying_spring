@@ -1,4 +1,4 @@
-var productApi = Vue.resource('/app/products{/id}');
+let productApi = Vue.resource('/app/products{/id}');
 
 Vue.component('product-row', {
     props: ['product'],
@@ -13,7 +13,7 @@ Vue.component('products-list', {
         '</div>'
 });
 
-var prod = new Vue({
+let prod = new Vue({
     el: '#prod',
     template: '<products-list :products="products" />',
     data: {
