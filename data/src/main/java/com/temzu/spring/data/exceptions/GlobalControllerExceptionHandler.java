@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(EnumConvertException.class)
-    public ResponseEntity<String> handleEnumConvert(RuntimeException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleEnumConvert(RuntimeException ex) {
+        MarketError err = new MarketError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PageDeterminationException.class)
-    public ResponseEntity<String> handlePaginationError(RuntimeException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler({PageDeterminationException.class, ProductNotFoundException.class})
+    public ResponseEntity<?> handlePaginationError(RuntimeException ex) {
+        MarketError err = new MarketError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        System.out.println(err);
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 }

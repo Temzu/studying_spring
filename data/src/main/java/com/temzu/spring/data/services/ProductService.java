@@ -1,6 +1,7 @@
 package com.temzu.spring.data.services;
 
 import com.temzu.spring.data.exceptions.PageDeterminationException;
+import com.temzu.spring.data.exceptions.ProductNotFoundException;
 import com.temzu.spring.data.model.SortDirection;
 import com.temzu.spring.data.model.dtos.ProductDto;
 import com.temzu.spring.data.model.entities.Product;
@@ -62,7 +63,8 @@ public class ProductService {
     }
 
     public ProductDto getProductById(@PathVariable Long id) {
-        return ProductMapper.MAPPER.productToProductDto(productRepository.findById(id).orElse(null));
+        return ProductMapper.MAPPER.productToProductDto(productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " doesn't exist")));
     }
 
     public ProductDto saveOrUpdate(@RequestBody ProductDto productDto) {
