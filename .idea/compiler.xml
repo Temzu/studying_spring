@@ -8,9 +8,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring_boot" />
         <module name="hibernate_crud" />
-        <module name="data" />
         <module name="lesson_3" />
         <module name="jpa_hiber_part-2" />
+      </profile>
+      <profile name="Annotation profile for data" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.4.1.Final/mapstruct-processor-1.4.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.4.1.Final/mapstruct-1.4.1.Final.jar" />
+        </processorPath>
+        <module name="data" />
       </profile>
     </annotationProcessing>
   </component>

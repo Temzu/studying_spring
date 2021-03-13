@@ -1,8 +1,10 @@
 package com.temzu.spring.data.services;
 
 import com.temzu.spring.data.exceptions.PageDeterminationException;
-import com.temzu.spring.data.model.Product;
 import com.temzu.spring.data.model.SortDirection;
+import com.temzu.spring.data.model.dtos.ProductDto;
+import com.temzu.spring.data.model.entities.Product;
+import com.temzu.spring.data.model.mappers.ProductMapper;
 import com.temzu.spring.data.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -23,46 +26,48 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<Product> getAllProducts(int page, int size, String[] sortFields, String sortDir) {
-        if (page <= 0 || size <= 0)
-            throw new PageDeterminationException(
-                    String.format("Page or size less or equal to zero: page %d, size %d", page, size));
-
+    public List<ProductDto> getAllProducts(
+            int page,
+            int size,
+            String[] sortFields,
+            String sortDir
+    ) {
         Sort sort = Sort.by(sortFields);
         Pageable pageable = PageRequest.of(page - 1, size,
                 sortDir.equals(SortDirection.ASC.toString()) ? sort.ascending() : sort.descending());
 
         Page<Product> products = productRepository.findAll(pageable);
         int totalPages = products.getTotalPages();
-        if (totalPages <= page)
+        if (totalPages < page)
             throw new PageDeterminationException(
                     String.format("Page not found: page %d, size %d, total pages %d", page, size, totalPages));
 
-        return products;
+        return ProductMapper.MAPPER.toProductDtoList(products.toList());
     }
 
-    public List<Product> getAllProductByPriceLessThan(Integer param) {
-        return productRepository.findAllByPriceLessThan(param);
+    public List<ProductDto> getAllProductByPriceLessThan(Integer param) {
+        return ProductMapper.MAPPER.toProductDtoList(productRepository.findAllByPriceLessThan(param));
     }
 
-    public List<Product> getAllProductByPriceGreaterThan(Integer param) {
-        return productRepository.findAllByPriceGreaterThan(param);
+    public List<ProductDto> getAllProductByPriceGreaterThan(Integer param) {
+        return ProductMapper.MAPPER.toProductDtoList(productRepository.findAllByPriceGreaterThan(param));
     }
 
-    public List<Product> getAllProductsByPriceBetween(Integer first, Integer second) {
-        return productRepository.findAllByPriceBetween(first, second);
+    public List<ProductDto> getAllProductsByPriceBetween(Integer first, Integer second) {
+        return ProductMapper.MAPPER.toProductDtoList(productRepository.findAllByPriceBetween(first, second));
     }
 
-    public List<Product> getAllProductsByTitleContaining(String title) {
-        return productRepository.findByTitleContainingIgnoreCase(title);
+    public List<ProductDto> getAllProductsByTitleContaining(String title) {
+        return ProductMapper.MAPPER.toProductDtoList(productRepository.findByTitleContainingIgnoreCase(title));
     }
 
-    public Product getProductById(@PathVariable Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductDto getProductById(@PathVariable Long id) {
+        return ProductMapper.MAPPER.productToProductDto(productRepository.findById(id).orElse(null));
     }
 
-    public Product addProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public ProductDto saveOrUpdate(@RequestBody ProductDto productDto) {
+        Product product = ProductMapper.MAPPER.productDtoToProduct(productDto);
+        return ProductMapper.MAPPER.productToProductDto(productRepository.save(product));
     }
 
     public void deleteProductById(@PathVariable Long id) {
