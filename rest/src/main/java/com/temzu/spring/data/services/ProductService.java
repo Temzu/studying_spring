@@ -17,11 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
 @Service
 public class ProductService {
     private ProductRepository productRepository;

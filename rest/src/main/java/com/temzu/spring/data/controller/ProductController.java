@@ -3,6 +3,7 @@ package com.temzu.spring.data.controller;
 import com.temzu.spring.data.model.SortDirection;
 import com.temzu.spring.data.model.dtos.ProductDto;
 import com.temzu.spring.data.repositories.specifications.ProductSpecifications;
+import com.temzu.spring.data.services.CartService;
 import com.temzu.spring.data.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,14 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CartService cartService;
 
     @GetMapping
     public Page<ProductDto> getAllProducts(
@@ -44,6 +46,11 @@ public class ProductController {
     public ProductDto saveProduct(@RequestBody ProductDto productDto) {
         productDto.setId(null);
         return productService.saveOrUpdate(productDto);
+    }
+
+    @PutMapping("/{id}")
+    public void addProductToCart(@PathVariable Long id) {
+        cartService.addToCart(productService.getProductById(id));
     }
 
     @PutMapping
