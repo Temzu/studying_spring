@@ -2,25 +2,22 @@ package com.temzu.spring.data.model.mappers;
 
 import com.temzu.spring.data.model.dtos.ProductDto;
 import com.temzu.spring.data.model.entities.Product;
-import org.mapstruct.InheritInverseConfiguration;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+@Component
+public class ProductMapper {
 
-@Mapper(uses = {CategoryMapper.class})
-public interface ProductMapper {
-    ProductMapper MAPPER = Mappers.getMapper(ProductMapper.class);
+    @Autowired
+    private ModelMapper mapper;
 
-    @Mapping(source = "categoryDto", target = "category")
-    Product productDtoToProduct(ProductDto productDto);
+    public ProductDto toProductDto(Product product) {
+        return mapper.map(product, ProductDto.class);
+    }
 
-    @InheritInverseConfiguration
-    ProductDto productToProductDto(Product product);
+    public Product toProduct(ProductDto productDto) {
+        return mapper.map(productDto, Product.class);
+    }
 
-    List<Product> toProductList(List<ProductDto> productDtos);
-
-    @InheritInverseConfiguration
-    List<ProductDto> toProductDtoList(List<Product> products);
 }

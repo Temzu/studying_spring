@@ -2,9 +2,12 @@ package com.temzu.spring.data.controller;
 
 import com.temzu.spring.data.model.SortDirection;
 import com.temzu.spring.data.model.dtos.ProductDto;
+import com.temzu.spring.data.repositories.specifications.ProductSpecifications;
 import com.temzu.spring.data.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +20,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<ProductDto> getAllProducts(
+    public Page<ProductDto> getAllProducts(
+            @RequestParam MultiValueMap<String, String> params,
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "5", required = false) Integer size,
             @RequestParam(defaultValue = "id", required = false) String[] sortFields,
@@ -27,27 +31,7 @@ public class ProductController {
             page = 1;
             size = 5;
         }
-        return productService.getAllProducts(page, size, sortFields, sortDir.toString());
-    }
-
-    @GetMapping("/less")
-    public List<ProductDto> getProductsByPriceLessThan(@RequestParam Integer param) {
-        return productService.getAllProductByPriceLessThan(param);
-    }
-
-    @GetMapping("/greater")
-    public List<ProductDto> getProductsByPriceGreaterThan(@RequestParam Integer param) {
-        return productService.getAllProductByPriceGreaterThan(param);
-    }
-
-    @GetMapping("/between")
-    public List<ProductDto> getProductsByPriceBetween(@RequestParam Integer first, @RequestParam Integer second) {
-        return productService.getAllProductsByPriceBetween(first, second);
-    }
-
-    @GetMapping("/contain")
-    public List<ProductDto> getProductsByTitleContaining(@RequestParam String s) {
-        return productService.getAllProductsByTitleContaining(s);
+        return productService.getAllProducts(ProductSpecifications.build(params), page, size, sortFields, sortDir.toString());
     }
 
     @GetMapping("/{id}")
